@@ -1,0 +1,32 @@
+version: "3"
+services:
+  web:
+    build: .
+    command: npm start
+    volumes:
+      - .:/usr/app
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - MONGODB_DATABASE=application
+      - MONGODB_URI=mongodb://db:27017
+      - NODE_PATH=src/
+    depends_on:
+      - db
+  adminmongo:
+    image: "mrvautin/adminmongo"
+    ports:
+      - "1234:1234"
+    environment:
+      - DB_HOST=db
+      - DB_PORT=27017
+      - HOST=0.0.0.0
+    depends_on:
+      - db
+  db:
+    image: mongo
+    volumes:
+      - ./data:/data/db
+    ports:
+      - "27017:27017"
